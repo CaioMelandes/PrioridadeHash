@@ -1,31 +1,52 @@
 package source;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Random;
+import javax.swing.*;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        HashTable teste = new HashTable();
-        String a = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-        char[] caracteres = a.toCharArray();
-        Random random = new Random();
+        HashTable tabela = new HashTable();
 
-        for (int i = 0; i < caracteres.length; i++) {
-            int n = random.nextInt(2);
-            teste.insert(String.valueOf(caracteres[i]), n);
+        while (true){
+            int op, prioridade;
+            String aux, nome;
+
+            aux = JOptionPane.showInputDialog("Escolha a opção:\n" +
+                    "1 - Inserir elemento\n" +
+                    "2 - Remover elemento\n" +
+                    "3 - Listar elementos\n" +
+                    "0 - Sair");
+
+            op = Integer.parseInt(aux);
+
+            switch (op){
+                case 1:
+                    try {
+                        nome = JOptionPane.showInputDialog("Digite o nome:");
+                        prioridade = Integer.parseInt(JOptionPane.showInputDialog("Digite a prioridade(0 ou 1):"));
+
+                        JOptionPane.showMessageDialog(null, tabela.insert(nome, prioridade));
+                        break;
+                    } catch (Exception e){
+                        JOptionPane.showMessageDialog(null, "Prioridade deve ser preenchida");
+                        break;
+                    }
+
+                case 2:
+                    nome = JOptionPane.showInputDialog("Digite o nome:");
+
+                    JOptionPane.showMessageDialog(null, tabela.remove(nome));
+                    break;
+
+                case 3:
+                    JOptionPane.showMessageDialog(null, tabela.lista());
+                    break;
+
+                default:
+                    System.exit(0);
+                    break;
+            }
         }
-        /*teste.insert("F", 1);
-        teste.insert("P", 1);
-        teste.insert("Z", 0);
-        teste.insert("d", 0);
-        teste.insert("n", 1);
-        teste.insert("x", 0);*/
-        teste.lista();
-
-
     }
-
 }

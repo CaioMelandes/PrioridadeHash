@@ -23,6 +23,15 @@ public class Entry {
         return soma;
     }
 
+    @Override
+    public String toString() {
+        return "(" +
+                value +
+                ", " + key +
+                ", " + priority +
+                ") ";
+    }
+
     public int getKey() {
         return key;
     }

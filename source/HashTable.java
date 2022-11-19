@@ -14,12 +14,19 @@ public class HashTable {
         }
     }
 
-    public void insert(String v, int p){
+    public String insert(String v, int p){
         Entry novoNodo = new Entry(v, p);
         int pos = novoNodo.getKey() % 10;
         RefereceEntry bucket = tabela.get(pos);
+        String msg;
 
-        if (bucket.isEmpty()){
+        if (v.isEmpty()) {
+            msg = "Nome deve ser preenchido";
+            return msg;
+        }else if (p != 0 && p != 1){
+            msg = "Prioridade de ser 0 ou 1";
+            return msg;
+        }else if (bucket.isEmpty()){
             bucket.setInicio(novoNodo);
             bucket.setFim(novoNodo);
         } else {
@@ -30,11 +37,12 @@ public class HashTable {
             organize(pos);
         }
 
-        System.out.println("Nome: "+ novoNodo.getValue());
-        System.out.println("Chave: "+ novoNodo.getKey());
-        System.out.println("Prioridade: "+ novoNodo.getPriority());
-        System.out.println("Posição na tabela: "+ pos);
-        System.out.println();
+        msg = "Nome: "+ novoNodo.getValue();
+        msg += "\nChave: "+ novoNodo.getKey();
+        msg += "\nPrioridade: "+ novoNodo.getPriority();
+        msg += "\nPosição na tabela: "+ pos +"\n";
+
+        return msg;
     }
 
     public void organize(int pos){
@@ -64,30 +72,60 @@ public class HashTable {
         }
     }
 
-    public void lista(){
+    public String lista(){
+        String msg = "";
+
         for (int i = 0; i < tabela.size(); i++) {
             RefereceEntry referencia = tabela.get(i);
 
             if (referencia.isEmpty()){
-                System.out.println("Bucket "+i+": Vazio");
+                msg += "Bucket "+i+": Vazio\n";
             } else {
-                System.out.print("Bucket "+i+": ");
+                msg += "Bucket "+i+": ";
 
                 Entry aux = referencia.getInicio();
 
                 while (aux != referencia.getFim()){
-                    System.out.print("("
-                            +aux.getValue()+", "
-                            +aux.getKey()+", "
-                            +aux.getPriority()+") ");
+                    msg += aux.toString();
                     aux = aux.next;
                 }
 
-                System.out.println("("
-                        +aux.getValue()+", "
-                        +aux.getKey()+", "
-                        +aux.getPriority()+") ");
+                msg += aux.toString()+"\n";
             }
         }
+        return msg;
+    }
+
+    public String remove(String nome){
+        Entry nodo = new Entry(nome, 0);
+        RefereceEntry bucket = tabela.get(nodo.getKey()%10);
+
+        Entry aux = bucket.getInicio();
+
+        if (nome.isEmpty()){
+            return "Nome deve ser preenchido";
+        }else if (aux == null){
+            return "Lista vazia";
+        }
+
+        while (!aux.getValue().equals(nome)){
+            if (aux.next == null){
+                return "Elemento não encontrado";
+            }
+            aux = aux.next;
+        }
+
+        if (aux == bucket.getInicio()){
+            bucket.setInicio(aux.next);
+            aux.next.prev = null;
+        } else if (aux == bucket.getFim()){
+            bucket.setFim(aux.prev);
+            aux.prev.next = null;
+        } else {
+            aux.prev.next = aux.next;
+            aux.next.prev = aux.prev;
+        }
+
+        return "Removendo: "+ aux;
     }
 }
